@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lian Confession</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Lobster&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+ 
+<style>
+/* === BASE === */
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  background:
+    radial-gradient(circle at top, rgba(255,170,210,0.28), transparent 55%),
+    radial-gradient(circle at bottom, rgba(255,140,180,0.25), transparent 60%),
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.25),
+      rgba(40,10,30,0.65)
+    ),
+    url("https://64.media.tumblr.com/eacfded0c609e1490f85849d92eb3986/7995b7c2e1705d5c-63/s500x750/5f8b18f3a112141f6a6d8eea696e1d8c0dc4f1b6.gif")
+    center/cover no-repeat fixed;
+
+  font-family: 'Playfair Display', serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+ 
+h1 {
+  font-family: 'Lobster', cursive;
+  font-size: 3em;
+  margin-bottom: 50px;
+  text-shadow:
+    0 0 10px rgba(255,180,220,0.6),
+    0 0 25px rgba(255,255,255,0.4);
+}
+ 
+.row { display: flex; gap: 24px; }
+ 
+/* === BUTTONS === */
+.btn {
+  width: 190px;
+  height: 190px;
+  border-radius: 26px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.95), rgba(225,225,225,0.9));
+  border: 4px solid rgba(0,0,0,0.85);
+  box-shadow:
+    12px 12px 0 rgba(0,0,0,0.35),
+    0 0 18px rgba(255,200,230,0.4);
+  position: relative;
+  transition: transform .2s, box-shadow .2s;
+}
+ 
+.btn:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow:
+    14px 14px 0 rgba(0,0,0,0.4),
+    0 0 28px rgba(255,180,220,0.6);
+}
+ 
+.btn.locked {
+  opacity: .45;
+  cursor: not-allowed;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+}
+ 
+.lock-icon-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 40px;
+  opacity: 0.9;
+}
+ 
+/* === MODALS === */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle, rgba(0,0,0,0.75), rgba(0,0,0,0.95));
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+ 
+.modal {
+  width: 60%;
+  max-height: 80vh;
+  overflow-y: auto;
+  background:
+    linear-gradient(135deg, rgba(40,40,40,0.96), rgba(10,10,10,0.98));
+  padding: 42px;
+  border-radius: 22px;
+  text-align: center;
+  animation: pop .3s ease;
+  box-shadow:
+    0 0 35px rgba(255,200,230,0.25),
+    inset 0 0 25px rgba(255,255,255,0.04);
+}
+ 
+/* === ANIMATIONS === */
+@keyframes pop {
+  from { transform: scale(.8); opacity: 0 }
+  to   { transform: scale(1); opacity: 1 }
+}
+ 
+.bounce { animation: bounce .6s ease; }
+@keyframes bounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  70% { transform: scale(.95); }
+  100% { transform: scale(1); }
+}
+ 
+.shake { animation: shake .4s; }
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
+ 
+/* === INPUTS === */
+.answer-input {
+  margin-top: 18px;
+  padding: 14px;
+  width: 72%;
+  border-radius: 18px;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+}
+ 
+.answer-input:focus {
+  outline: none;
+  box-shadow:
+    0 0 14px rgba(255,180,220,0.7),
+    inset 0 0 12px rgba(0,0,0,0.7);
+}
+ 
+/* === ACTION BUTTONS === */
+.submit-btn {
+  margin-top: 24px;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, #ff7ad9, #ffd36a);
+  border: none;
+  border-radius: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255,180,220,0.6);
+  transition: transform .2s, box-shadow .2s;
+}
+ 
+.submit-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 30px rgba(255,200,230,0.8);
+}
+ 
+/* === FINAL BUTTONS === */
+.final-btns button {
+  margin: 12px;
+  padding: 16px 36px;
+  border-radius: 45px;
+  border: none;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff7ad9, #ffd36a);
+  box-shadow: 0 0 25px rgba(255,180,220,0.7);
+  transition: transform .2s;
+}
+ 
+.final-btns button:hover { transform: scale(1.1); }
+ 
+/* === CONFETTI & HEARTS === */
+.confetti-piece, .heart {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+ 
+@keyframes confetti-fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity:0; }
+}
+ 
+@keyframes heart-up {
+  to { transform: translateY(-80vh) scale(1.2); opacity:0; }
+}
+</style>
+ 
+</head>
+ 
+<body>
+ 
+<h1>🎉 My New Year paragraph for you 🎉</h1>
+ 
+<div class="row">
+  <button class="btn" id="btn1">Appreciation</button>
+  <button class="btn locked" id="btn2">The dream<img class="lock-icon-overlay" src="https://images.vexels.com/media/users/3/144128/isolated/preview/6ba749b46777840a7b23c190f4d25b50-padlock-doodle-icon.png"></button>
+  <button class="btn locked" id="btn3">My friends about you<img class="lock-icon-overlay" src="https://images.vexels.com/media/users/3/144128/isolated/preview/6ba749b46777840a7b23c190f4d25b50-padlock-doodle-icon.png"></button>
+  <button class="btn locked" id="btn4">??? <img class="lock-icon-overlay" src="https://images.vexels.com/media/users/3/144128/isolated/preview/6ba749b46777840a7b23c190f4d25b50-padlock-doodle-icon.png"></button>
+</div>
+ 
+<!-- STORY MODALS -->
+<div class="modal-bg" id="story1">
+  <div class="modal"><h2>Appreciation</h2><p>Lia. I appreciate everything about you, and it’s hard to even put into words because it’s all so much. I love how you actually take the time to learn games just for me, even the ones you might not care about, just so we can play together and have fun. It shows me how thoughtful and caring you are. I love how you give me bedtime like a soft, gentle mother, always making sure I take care of myself even when I don’t always follow it right away. I love how you remind me of little things like my jacket, my keys, or random things I would forget. Every time you do it, I feel cared for and seen. I love how we can talk about anything at all. Even when we have arguments or things get heated, you still stay, you still talk it out with me, and you comfort me in ways I cannot even describe. You make me feel safe in ways that nobody else ever has. Your good night messages are always so long, so meaningful, and every single word makes me feel loved. I love how you care about me in ways big and small, how you notice the little details, how you always try to make my day better even when your own days are hard. I love that you put effort into us and our happiness. I love that you make me feel like I am your person, the one you trust, the one you choose, over and over again. I love how we joke together, how we get things a little bit spicy, how we have fun, and how even in tough moments we stay connected. You’ve taught me so much about love, patience, and care, and I feel so lucky to have someone like you in my life. Every day with you, whether we are talking, playing, laughing, or just being with each other, feels special. I notice every little thing you do, every little effort you make, and it all adds up to this overwhelming feeling of gratitude and love for you. You are not just someone I care about... you are someone I want to grow with, someone I want to cherish and protect, someone I want to make happy for the rest of our lives. Everything about you matters to me, every smile, every word, every little habit, every effort, and it makes me love you more than I ever thought possible. Lia, I hope you always know how much I notice, treasure, and appreciate every part of you, because you truly are incredible, and I am so grateful to have you in my life.</p><button class="submit-btn" onclick="openQuiz(1)">Go to Quiz</button></div>
+</div>
+<div class="modal-bg" id="story2">
+  <div class="modal"><h2>The dream</h2><p>I’ve been keeping this to myself for a long time, and every time I thought about telling you, my heart hesitated. Not because I didn’t trust you, but because I didn’t understand it myself back then. It happened very early, when we had just started getting closer, when we were both still healing, still unsure, still scared of hoping for too much. I had a dream about you. Not the kind that fades away after you wake up, not the kind you forget by the afternoon. It stayed with me. It felt calm, slow, and real in a way that made me sit there in silence when I opened my eyes.
+ 
+In that dream, I confessed to you. I remember how natural it felt. There was no panic, no fear, no second guessing. I just spoke from my heart, and you listened. You didn’t run. You didn’t hesitate. You stayed. And from there, time moved in the gentlest way possible. We grew together. We learned each other, not perfectly, but honestly. We had small moments that meant everything, quiet mornings, shared laughs, comfort after bad days. I saw us choosing each other over and over again. I saw us older, still holding hands, still finding safety in one another. I saw a life that felt peaceful, warm, and full. Marriage, a home, even kids. Not in a dramatic way, but in a way that felt normal, like it was always meant to be there.
+ 
+When I woke up, I wasn’t excited. I wasn’t happy. I was confused. I remember staring at the ceiling and asking myself why my heart would imagine something like that so early. Why you. Why now. Why something so deep before I even allowed myself to feel ready. It scared me, honestly. I had just come out of something that hurt me, and the idea that my heart could already picture a future felt dangerous. So I kept it quiet. I told myself it was just a dream, that it didn’t mean anything, that I shouldn’t read into it. But it never left. It stayed with me in the background, soft but persistent.
+ 
+As time passed, as I got to know you more, as I saw the way you love, the way you care, the way you feel things deeply and genuinely, that dream started making sense in a way it didn’t before. I realized maybe my heart saw something before my mind was ready to accept it. Maybe it wasn’t trying to rush me or force me into anything. Maybe it was just recognizing a feeling that felt familiar, safe, and right. I didn’t tell you because I didn’t want to scare you, and I didn’t want to scare myself. I wanted to be careful with something that felt precious.
+ 
+That dream became something I quietly protected. Not because I was ashamed of it, but because it mattered to me. And now, telling you this feels different. It feels gentle, honest, and real. I’m not saying it was a promise or a prediction. I’m saying it was my heart showing me what it longed for before I knew how to name it. And somehow, the more time I spend with you, the more that dream feels less like imagination and more like hope</p><button class="submit-btn" onclick="openQuiz(2)">Go to Quiz</button></div>
+</div>
+<div class="modal-bg" id="story3">
+  <div class="modal"><h2>My friends about you</h2><p>When I first started talking to my friends about you, Lian, I didn’t even know where to begin because everything about you felt so rare, so special, and so genuine that words seemed too small. I remember telling them how quickly we connected, how natural it felt to open up to you even after everything I had been through. I told them that I had found someone unlike anyone else, someone who made me feel safe, seen, and genuinely cared for in ways I had never experienced before. I shared with them how much I admired your patience, your kindness, your thoughtful ways, and even how your little habits like reminding me to take my jacket, checking in on me, or sending me your sweet messages made me realize how lucky I was to have you in my life. I wanted them to know that this was not just a fleeting crush or a passing connection. I wanted them to understand that I had found someone I wanted a future with, someone I could imagine building memories, laughter, and love with for years to come. I told them about the way you make me feel heard and cared for, about how even during difficult moments you always find a way to comfort me and talk things through. I shared how proud I felt to call you mine even if it was just in my heart at the time and how every time I thought about you, I felt like I had truly won in life, like I had been given something precious and unrepeatable. I told them about your jokes, your sweetness, and the way you are gentle with me. Every story I shared about you with them was filled with admiration, warmth, and excitement because you had become my safe place, my happiness, and my hope for something beautiful. Even now, when I think about what I told them, I smile because every word was true, and every feeling I shared with them was a reflection of just how much you mean to me, how much I cherish you, and how serious I am about us. The way I spoke about you to others was a way of holding you close, of claiming you in the purest and most honest sense because you are worth everything I could ever hope for in someone I love. Every moment we share, every memory we build, and every laugh we have confirms to me that you are the one I want by my side for the rest of my life and that feeling grows stronger every single day.</p><button class="submit-btn" onclick="openQuiz(3)">Go to Quiz</button></div>
+</div>
+ 
+<!-- FINAL STORY -->
+<div class="modal-bg" id="story4">
+  <div class="modal">
+    <h2>???</h2>
+    <p>
+      There is something I have been feeling for a long time and I want to finally share it with you. Being with you, even before we were even a "thing", felt like we were already in our own little world together. Every laugh, every game we played, every late night conversation made it feel like we were dating without needing a label. I loved how we could just be ourselves with each other, how we could joke, tease, care, fight, and comfort each other without worrying about anything else. It felt like we were always meant to confess to each other, to finally say it out loud, but the timing never seemed right until now. Until New Years. Until this moment. Everything we have shared, every memory, every emotion has led to this. I wanted to wait for the perfect moment because what we have is too important to rush. Every first we shared, every silly argument, every time you made me laugh until my cheeks hurt, it all made me realize how much I need you in my life. You are not just someone I love. You are my person, my safe place, my joy, and my future. I cannot imagine this life without you by my side. I want this New Year to mark a new chapter for us, a moment where we start officially, where we take the next step together. I have been waiting for this, for us, for the right time, and now it is here. This is our moment, and I want you to know that everything I feel for you has only grown stronger with each day we spend together. You are everything I have been looking for and more.<br>
+      Read everything and press the button below!
+    </p>
+    <button class="submit-btn" id="finalQuizBtn" onclick="showFinalQuestion()">Final Quiz 💫</button>
+  </div>
+</div>
+ 
+<!-- QUIZ MODALS -->
+<div class="modal-bg" id="quiz1">
+  <div class="modal" id="box1"><p>❓ Do you know how many days apart out birthdays are? Now here's the twist because I'm annoying. Don't type the number normally. Type it reversed.</p><input id="a1" class="answer-input"><button class="submit-btn" onclick="checkAnswer(1)">Submit</button></div>
+</div>
+<div class="modal-bg" id="quiz2">
+  <div class="modal" id="box2"><p>❓ What kind of hug would I give you when we meet? (Hinted answer: "#### hug and hug from ######")</p><input id="a2" class="answer-input"><button class="submit-btn" onclick="checkAnswer(2)">Submit</button></div>
+</div>
+<div class="modal-bg" id="quiz3">
+  <div class="modal" id="box3"><p>Don't even try guessing the password lil girl..</p><input id="a3" class="answer-input"><button class="submit-btn" onclick="checkAnswer(3)">Submit</button></div>
+</div>
+ 
+<!-- FINAL YES/NO QUESTION -->
+<div class="modal-bg" id="finalQuestion">
+  <div class="modal">
+    <h2>💖 Final Quiz 💖</h2>
+    <p>I’ve shared my thoughts, my dreams, my heart with you, and now there’s only one thing left to ask. I don't want to hold this back, not even a single day longer... So here it is, in the most honest way I know how.. Will you make me the happiest and luckiest man alive, stepping into this new chapter with me and let me proudly call you my girlfriend, my partner, my forever?</p>
+<div class="final-btns">
+  <button onclick="finalAnswerYes()">Yes 💖</button>
+  <button onclick="finalAnswerYes()">Yes 💞</button>
+</div>
+  </div>
+</div>
+ 
+<!-- FINAL CONFESSION -->
+<div class="modal-bg" id="finalResult">
+  <div class="modal"><h2>My dear..</h2><p>Now I can finally say it out loud, without hesitation or timing worries. You’re officially my girlfriend, my partner in every laugh, every silly moment, every late night, every dream. From this moment forward, it’s us.. us against the world, us sharing our days, our thoughts, our future. You’re not just the girl I love, you’re the girl I get to call MINE, and I promise to cherish you, support you, and make you smile as much as you make me smile every single day. I can finally call you my girlfriend, and just thinking about it makes my heart feel so full. Here’s to us, our story, and every beautiful memory we’ve yet to create together. I'm so glad you're the person that I'm starting 2026 with. I love you so much.</p></div>
+</div>
+ 
+<script>
+// CONTINUOUS FALLING HEARTS
+function spawnHeartsLoop(){
+    const heartChars = ['❤'];
+    const el = document.createElement('div');
+    el.className = 'heart';
+    el.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.bottom = '-6vh';
+    el.style.fontSize = (12 + Math.random() * 28) + 'px';
+    el.style.opacity = 0.8 + Math.random() * 0.2;
+    el.style.animation = `heart-up ${3000 + Math.random() * 2000}ms ease forwards`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+
+    // spawn next heart after a short random interval
+    setTimeout(spawnHeartsLoop, 300 + Math.random() * 700);
+}
+
+// start the loop when page loads
+window.addEventListener('load', spawnHeartsLoop);
+
+const answers = {1:"67",2:"bear hug and hug from behind",3:"happy new year my love"};
+ 
+btn1.onclick = () => story1.style.display="flex";
+btn2.onclick = () => !btn2.classList.contains("locked") && (story2.style.display="flex");
+btn3.onclick = () => !btn3.classList.contains("locked") && (story3.style.display="flex");
+btn4.onclick = () => !btn4.classList.contains("locked") && (story4.style.display="flex");
+ 
+function openQuiz(n){
+  document.getElementById(`story${n}`).style.display="none";
+  document.getElementById(`quiz${n}`).style.display="flex";
+}
+ 
+function checkAnswer(n){
+  const val = document.getElementById(`a${n}`).value.trim().toLowerCase();
+  if(val===answers[n]){
+    document.getElementById(`quiz${n}`).style.display="none";
+    const nextBtn = document.getElementById(`btn${n+1}`);
+    nextBtn.classList.remove("locked");
+    const lockIcon = nextBtn.querySelector(".lock-icon-overlay");
+    if(lockIcon) lockIcon.remove();
+    nextBtn.classList.add("bounce");
+    setTimeout(()=>nextBtn.classList.remove("bounce"),600);
+  } else {
+    const box = document.getElementById(`box${n}`);
+    box.classList.add("shake");
+    setTimeout(()=>box.classList.remove("shake"),400);
+  }
+}
+ 
+// FINAL YES/NO
+function showFinalQuestion(){
+  story4.style.display="none";
+  finalQuestion.style.display="flex";
+}
+ 
+function finalAnswerYes(){
+  finalQuestion.style.display="none";
+  finalResult.style.display="flex";
+  spawnConfetti(36);
+  spawnHearts(18);
+}
+ 
+function finalAnswerNo(){
+  alert("noooo.");
+}
+ 
+// CONFETTI & HEARTS
+function spawnConfetti(count=28){
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    const size=6+Math.random()*12;
+    el.style.width=el.style.height=size+'px';
+    el.style.left=(Math.random()*100)+'vw';
+    el.style.background=`hsl(${Math.random()*360},80%,60%)`;
+    el.style.top='-10vh';
+    el.style.opacity=0.95;
+    el.style.borderRadius='2px';
+    el.style.animation=`confetti-fall ${2800+Math.random()*900}ms linear forwards`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3600);
+  }
+}
+ 
+function spawnHearts(count=14){
+  const heartChars=['❤','💗','💖','💕'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='heart';
+    el.textContent=heartChars[Math.floor(Math.random()*heartChars.length)];
+    const left=Math.random()*90;
+    el.style.left=left+'vw';
+    el.style.bottom='-6vh';
+    el.style.fontSize=(12+Math.random()*28)+'px';
+    el.style.opacity=(0.8+Math.random()*0.2);
+    el.style.animation=`heart-up ${2000+Math.random()*900}ms ease forwards`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3000);
+  }
+}
+</script>
+
+</body>
+</html>
+ 
